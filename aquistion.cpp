@@ -25,7 +25,7 @@ void *thread_func(void *data)
 {
         /* Do RT specific stuff here */
         struct thread_args* args = static_cast<thread_args*>(data); 
-        clock_gettime(CLOCK_MONOTONIC_RAW, args->ts_wait);
+        clock_gettime(CLOCK_MONOTONIC, args->ts_wait);
         fprintf(stderr, "[RT thread] started\n");
         int sample_count =0;
         while(running)
@@ -52,7 +52,7 @@ void *thread_func(void *data)
                         args->ts_wait->tv_sec++;
                         args->ts_wait->tv_nsec -= 1000000000;
                 }
-                ret = clock_nanosleep(CLOCK_MONOTONIC_RAW, TIMER_ABSTIME, args->ts_wait, NULL);
+                ret = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, args->ts_wait, NULL);
                 if (ret != 0 && ret != EINTR)
                         break;
         }

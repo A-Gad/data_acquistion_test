@@ -16,24 +16,39 @@ RingBuffer::RingBuffer(size_t buff_size)
 }
 void RingBuffer::write(struct RingBuffer_entry* new_entry)
 {
-    this->_buffer[this->write_index.load(std::memory_order_relaxed) & (this->capacity-1)];
+    uint64_t curr_write = write_index.load(std::memory_order_relaxed);
+    uint64_t curr_read  = read_index.load(std::memory_order_acquire); // Acquire ensures we read an accurate position
+
+    // Check if buffer is completely full
+    if ((curr_write - curr_read) >= capacity)
+    {
+        // Buffer is full! Drop the sample or log an overrun counter.
+        return; 
+    }
+
+    // 1. Copy the data safely into the slots
+    _buffer[curr_write & (capacity - 1)] = *new_entry;
+
+    // 2. Advance the write pointer, releasing the data to the reading thread
     write_index.fetch_add(1, std::memory_order_release);
-    
 }
 
 int RingBuffer::read(RingBuffer_entry* out)
 {
-    uint64_t current_write = write_index.load(std::memory_order_acquire);
-    if( current_write == this->read_index.load(std::memory_order_relaxed) )
+    uint64_t curr_read  = read_index.load(std::memory_order_relaxed);
+    uint64_t curr_write = write_index.load(std::memory_order_acquire); // Acquire ensures data is flushed to cache
+
+    // Check if buffer is completely empty
+    if (curr_write == curr_read)
     {
         return -1;
     }
-    if( current_write - this->read_index.load(std::memory_order_relaxed) > (this->capacity))
-    {
-        this->read_index.store(current_write - capacity, std::memory_order_relaxed);
-    }
-    *out = this->_buffer[this->read_index.load(std::memory_order_relaxed) & (capacity-1)];
-    this->read_index.fetch_add(1, std::memory_order_release);
+
+    // 1. Fetch the data entry out of the slots
+    *out = _buffer[curr_read & (capacity - 1)];
+
+    // 2. Advance read pointer. Release semantics ensure we are done copying before the writer sees it's free.
+    read_index.fetch_add(1, std::memory_order_release);
     return 0;
 }
 
