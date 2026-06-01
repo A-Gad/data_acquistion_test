@@ -70,8 +70,9 @@ void handler(int signum) {
 void store_data(std::shared_ptr<RingBuffer> buff)
 {
         fprintf(stderr, "[store_data] started\n");
-        FILE* tempfile = fopen("/tmp/spi_data", "a");
+        FILE* tempfile = fopen("/tmp/spi_data", "w");
         if(!tempfile) { perror("fopen"); return; }
+        fprintf(tempfile, "timestamp,adc_value\n");
         int sample_count = 0;
         while(running)
         {
@@ -83,11 +84,10 @@ void store_data(std::shared_ptr<RingBuffer> buff)
                     sample_count, read_entry.spi_rx);
         }
         // write timestamp seconds, nanoseconds and ADC value
-        fprintf(tempfile, "%ld.%09ld %u\n",
+        fprintf(tempfile, "%ld,%ld,%u\n",
                 read_entry.ts.tv_sec,
                 read_entry.ts.tv_nsec,
                 read_entry.spi_rx);
-        
         
         if(sample_count++ % 1000 == 0)
                 fflush(tempfile);
