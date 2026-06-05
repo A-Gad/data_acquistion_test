@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(vibration-monitor LANGUAGES C CXX)
 
+# KISS FFT is included as a vendor source tree in kissfft/ and
+# is provided under the BSD-3-Clause license.
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
