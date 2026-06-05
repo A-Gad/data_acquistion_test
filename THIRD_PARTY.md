@@ -1,9 +1,10 @@
 # Third-Party Dependencies
 
-This project includes the KISS FFT library as a vendor copy in the `kissfft/` directory.
+This project includes the KISS FFT library as a git submodule in the `kissfft/` directory.
 
 ## KISS FFT
-- Source path: `kissfft/`
+- Submodule path: `kissfft/`
+- Submodule URL: `https://github.com/mborgerding/kissfft.git`
 - License: BSD 3-Clause
 - License file: `kissfft/COPYING`
 - SPDX identifier: `BSD-3-Clause`
