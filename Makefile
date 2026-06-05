@@ -7,7 +7,7 @@ LDFLAGS = -lpthread -lrt -lm
 
 TARGET = vibration-monitor
 
-CPP_SRCS = aquistion.cpp mcp3008spi.cpp ringbuffer.cpp
+CPP_SRCS = aquistion.cpp mcp3008spi.cpp ringbuffer.cpp processing_thread.cpp
 C_SRCS = kiss_fft.c kiss_fftr.c
 OBJS = $(CPP_SRCS:.cpp=.o) $(C_SRCS:.c=.o)
 
@@ -24,7 +24,8 @@ $(TARGET): $(OBJS)
 
 fft_test: fft_test.cpp kiss_fft.o kiss_fftr.o
 	$(CXX) $(CXXFLAGS) -o fft_test fft_test.cpp kiss_fft.o kiss_fftr.o -lm
+
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET) fft_test
 
 .PHONY: all clean

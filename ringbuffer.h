@@ -37,6 +37,7 @@ class RingBuffer
         RingBuffer(size_t buff_size);
         void write(struct RingBuffer_entry* new_entry);
         int read(RingBuffer_entry* out);
+
         ~RingBuffer();
 };
 
