@@ -14,6 +14,7 @@ static bool thread_started = false;
 struct ThreadContext {
     std::shared_ptr<RingBuffer> buffer;
     std::atomic<bool>* running;
+    InferenceEngine* inference_engine = nullptr;
 };
 
 static void* processing_thread_func(void* data) {

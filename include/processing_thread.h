@@ -5,6 +5,7 @@
 #include <atomic>
 #include <memory>
 #include "ringbuffer.h"
+#include "inferenceEngine.h"
 
 struct ProcessingResults {
     float shaft_fundamental;
