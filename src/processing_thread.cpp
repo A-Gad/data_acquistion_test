@@ -14,7 +14,7 @@ static bool thread_started = false;
 struct ThreadContext {
     std::shared_ptr<RingBuffer> buffer;
     std::atomic<bool>* running;
-    InferenceEngine* inference_engine = nullptr;
+    std::unique_ptr<InferenceEngine> inference_engine = nullptr;
 };
 
 static void* processing_thread_func(void* data) {
@@ -63,6 +63,13 @@ static void* processing_thread_func(void* data) {
                 bearing_fault_max = magnitude[i];
             }
         }
+        
+        // if(!(ctx->inference_engine->loadModel(MODEL_PATH)))
+        // {
+        //     std::cerr<<"cannot load model!" ;
+        //     !ctx->running;
+        // }
+
 
         std::cout << std::fixed << std::setprecision(2)
                   << "\r[FFT] RMS: " << rms 

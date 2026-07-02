@@ -9,7 +9,6 @@ protected:
     InferenceEngine engine;
     const float ANOMALY_THRESHOLD = 0.05f;
 
-    // No normalizer needed — test_data.h values are already normalized
     std::vector<float> normal_test_data{std::begin(NORMAL_TEST_DATA), std::end(NORMAL_TEST_DATA)};
     std::vector<float> abnormal_test_data{std::begin(ABNORMAL_TEST_DATA), std::end(ABNORMAL_TEST_DATA)};
 

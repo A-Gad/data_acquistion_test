@@ -4,8 +4,11 @@
 #include <pthread.h>
 #include <atomic>
 #include <memory>
+#include <string>
 #include "ringbuffer.h"
 #include "inferenceEngine.h"
+
+#define MODEL_PATH  "../model/autoencoder_anomaly_detector.tflite"
 
 struct ProcessingResults {
     float shaft_fundamental;
